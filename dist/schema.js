@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { RICH_TEXT_MAX_LENGTH, RICH_TEXT_PROFILES } from './format.js';
+import { normaliseRichText, RICH_TEXT_MAX_LENGTH, RICH_TEXT_PROFILES } from './format.js';
 import { checkRichText } from './parse.js';
 /** The key under which a formatted field names its profile, in its schema's metadata and JSON Schema. */
 export const RICH_TEXT_META_KEY = 'x-rich-text';
@@ -8,13 +8,15 @@ export const richTextFieldSchema = z.strictObject({
     max: z.int().min(1).max(RICH_TEXT_MAX_LENGTH),
 });
 /**
- * A formatted field: a string no longer than `max`, refused when it uses
- * anything beyond its profile. The owning layer finds it from its schema
+ * A formatted field: a string, normalised (`normaliseRichText`), no longer
+ * than `max`, refused when it uses anything beyond its profile or holds a
+ * control character. The owning layer finds it from its schema
  * (`richTextFields`) and checks it on every save, whichever screen sent it.
  */
 export function richTextSchema(field) {
     const { profile, max } = richTextFieldSchema.parse(field);
     return z.string()
+        .overwrite(normaliseRichText)
         .max(max)
         .superRefine((value, context) => {
         if (value.length > max)

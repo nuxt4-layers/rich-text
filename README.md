@@ -23,7 +23,7 @@ Plain text is not rich text. A label, name or title is an ordinary string with a
 | **Block** | Inline, plus headings, lists and quotes | A bio, a description, a summary |
 | **Document** | Everything: also strikethrough, code, tables, rules, `asset:` images and `doc:` links | An article or a page |
 
-A save that uses anything beyond its profile is refused. A tree read from such a source holds it as text.
+Every save is normalised (NFC, `\n` line ends); one with a control character other than tab and newline, or anything beyond its profile, is refused. A tree read from such a source holds it as text.
 
 ## Links
 
@@ -60,12 +60,13 @@ const nodes = parseRichText(source, 'block')
 
 | Export | Does |
 |---|---|
-| `richTextSchema({ profile, max })` | A zod string refused beyond its profile; its profile is in its metadata (`x-rich-text`) |
+| `richTextSchema({ profile, max })` | A zod string, normalised, refused beyond its profile or with a control character; its profile is in its metadata (`x-rich-text`) |
 | `richTextFields(schema)` | Every formatted field in a schema, with its path (`blocks[].body`), profile and maximum |
-| `checkRichText(source, { profile, max })` | Problems (`too-long`, `not-in-profile`, `more-than-one-paragraph`, `image-without-alt`, `image-not-asset`), constructs beyond the profile, and the documents and assets named |
+| `checkRichText(source, { profile, max })` | Problems (`too-long`, `unsafe-characters`, `not-in-profile`, `more-than-one-paragraph`, `image-without-alt`, `image-not-asset`), constructs beyond the profile, and the documents and assets named |
 | `parseRichText(source, profile)` | The safe tree. Never throws; nesting is bounded. An inline tree is phrasing only |
 | `richTextTreeSchema`, `richTextNodeSchema` | Check a safe tree received from elsewhere |
-| `RICH_TEXT_*`, link patterns, `safeHref` | The format's rules, as data |
+| `normaliseRichText(source)` | One form for equal text: Unicode NFC and `\n` line ends. Check a normalised source: a carriage return is a control character |
+| `RICH_TEXT_*`, link and character patterns, `safeHref` | The format's rules, as data |
 
 Drawing the tree is `nuxt4-layers/ui`'s; editing a formatted field is `content-editor`'s, or a plain `<textarea>`.
 

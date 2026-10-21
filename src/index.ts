@@ -9,6 +9,8 @@ export {
   RICH_TEXT_PROFILE_CONSTRUCTS,
   RICH_TEXT_PROFILES,
   SITE_LINK_PATTERN,
+  UNSAFE_CHARACTER_PATTERN,
+  normaliseRichText,
   type RichTextConstruct,
   type RichTextProfile,
 } from './format.js'

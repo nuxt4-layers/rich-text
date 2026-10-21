@@ -1,7 +1,7 @@
 import { type RichTextConstruct, type RichTextProfile } from './format.js';
 import { type RichTextNode } from './tree.js';
 /** Why a source may not be saved in a field. */
-export type RichTextProblem = 'too-long' | 'not-in-profile' | 'more-than-one-paragraph' | 'image-without-alt' | 'image-not-asset';
+export type RichTextProblem = 'too-long' | 'unsafe-characters' | 'not-in-profile' | 'more-than-one-paragraph' | 'image-without-alt' | 'image-not-asset';
 export interface RichTextCheck {
     /** Empty when the source may be saved. */
     problems: RichTextProblem[];
@@ -23,5 +23,9 @@ export interface RichTextField {
  * An inline field's tree is phrasing only, with no paragraph around it.
  */
 export declare function parseRichText(source: string, profile: RichTextProfile): RichTextNode[];
-/** What saving a source in a field needs to know: its problems, and the documents and assets it names. */
+/**
+ * What saving a source in a field needs to know: its problems, and the
+ * documents and assets it names. Check the normalised source
+ * (`normaliseRichText`): a carriage return is a control character.
+ */
 export declare function checkRichText(source: string, field: RichTextField): RichTextCheck;

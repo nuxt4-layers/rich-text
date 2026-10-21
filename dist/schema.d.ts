@@ -12,8 +12,9 @@ export declare const richTextFieldSchema: z.ZodObject<{
     max: z.ZodInt;
 }, z.core.$strict>;
 /**
- * A formatted field: a string no longer than `max`, refused when it uses
- * anything beyond its profile. The owning layer finds it from its schema
+ * A formatted field: a string, normalised (`normaliseRichText`), no longer
+ * than `max`, refused when it uses anything beyond its profile or holds a
+ * control character. The owning layer finds it from its schema
  * (`richTextFields`) and checks it on every save, whichever screen sent it.
  */
 export declare function richTextSchema(field: RichTextField): z.ZodString;

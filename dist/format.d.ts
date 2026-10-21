@@ -12,6 +12,10 @@ export declare const DOC_LINK_PATTERN: RegExp;
 export declare const ASSET_LINK_PATTERN: RegExp;
 /** A site-relative link: one leading `/`, never `//`. */
 export declare const SITE_LINK_PATTERN: RegExp;
+/** Control, private-use and surrogate characters: never in a source, but for tab and newline. */
+export declare const UNSAFE_CHARACTER_PATTERN: RegExp;
+/** One form for equal text: Unicode NFC and `\n` line ends. Every save normalises before it checks. */
+export declare function normaliseRichText(source: string): string;
 /** Constructs nested deeper than this become text: the format bounds the tree a renderer walks. */
 export declare const RICH_TEXT_MAX_DEPTH = 64;
 /** The longest source any field may declare, in characters. */
