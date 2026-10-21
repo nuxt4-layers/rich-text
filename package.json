@@ -1,0 +1,48 @@
+{
+  "name": "@nuxt4-layers/rich-text",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "The platform's one rich-text format: a safe subset of Markdown, its profiles, the checks before saving and the safe tree readers receive.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nuxt4-layers/rich-text"
+  },
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "check": "pnpm typecheck && pnpm test"
+  },
+  "dependencies": {
+    "mdast-util-from-markdown": "^2.1.0",
+    "mdast-util-gfm-strikethrough": "^2.0.1",
+    "mdast-util-gfm-table": "^2.0.0",
+    "micromark-extension-gfm-strikethrough": "^2.1.0",
+    "micromark-extension-gfm-table": "^2.1.2",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/mdast": "^4.0.4",
+    "@types/node": "^24.13.6",
+    "typescript": "^6.0.3",
+    "vitest": "^5.0.3"
+  },
+  "packageManager": "pnpm@10.28.0",
+  "engines": {
+    "node": ">=22"
+  }
+}
