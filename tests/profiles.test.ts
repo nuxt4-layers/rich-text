@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { checkRichText, parseRichText, RICH_TEXT_PROFILE_CONSTRUCTS, RICH_TEXT_PROFILES } from '../src/index.js'
+import { checkRichText, normaliseRichText, parseRichText, RICH_TEXT_PROFILE_CONSTRUCTS, RICH_TEXT_PROFILES } from '../src/index.js'
 
 const target = '01928c4e-0000-7000-8000-000000000042'
 const max = 10_000
@@ -54,6 +54,12 @@ describe('profiles', () => {
     expect(checkRichText('One.\n\nTwo.', { profile: 'inline', max }).problems).toEqual(['more-than-one-paragraph'])
     expect(parseRichText('A **bold** claim', 'inline')).toEqual([{ kind: 'text', value: 'A ' }, { kind: 'strong', children: [{ kind: 'text', value: 'bold' }] }, { kind: 'text', value: ' claim' }])
     expect(parseRichText('One.\n\nTwo.', 'inline')).toEqual([{ kind: 'text', value: 'One.' }, { kind: 'break' }, { kind: 'text', value: 'Two.' }])
+  })
+
+  it('refuses control characters, carriage returns among them: check the normalised source', () => {
+    expect(checkRichText('a\u0000b', { profile: 'inline', max })).toMatchObject({ problems: ['unsafe-characters'] })
+    expect(checkRichText('a\r\nb', { profile: 'block', max }).problems).toEqual(['unsafe-characters'])
+    expect(checkRichText(normaliseRichText('a\r\nb'), { profile: 'block', max }).problems).toEqual([])
   })
 
   it('refuses a source longer than its field', () => {

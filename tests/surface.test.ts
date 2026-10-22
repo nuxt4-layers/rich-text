@@ -23,7 +23,7 @@ describe('a stateless library (ADR-0011 §7)', () => {
     expect(Object.keys(library).sort()).toEqual([
       'ASSET_LINK_PATTERN', 'DOC_LINK_PATTERN', 'RICH_TEXT_CONSTRUCTS', 'RICH_TEXT_EXTENSIONS', 'RICH_TEXT_LINK_SCHEMES',
       'RICH_TEXT_MAX_DEPTH', 'RICH_TEXT_MAX_LENGTH', 'RICH_TEXT_META_KEY', 'RICH_TEXT_PROFILES', 'RICH_TEXT_PROFILE_CONSTRUCTS',
-      'SITE_LINK_PATTERN', 'checkRichText', 'parseRichText', 'richTextFieldSchema', 'richTextFields', 'richTextNodeSchema',
+      'SITE_LINK_PATTERN', 'UNSAFE_CHARACTER_PATTERN', 'checkRichText', 'normaliseRichText', 'parseRichText', 'richTextFieldSchema', 'richTextFields', 'richTextNodeSchema',
       'richTextSchema', 'richTextTreeSchema', 'safeHref',
     ])
   })

@@ -12,6 +12,12 @@ export const DOC_LINK_PATTERN = /^doc:([0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89a
 export const ASSET_LINK_PATTERN = /^asset:([A-Za-z0-9][A-Za-z0-9._-]{0,199})$/;
 /** A site-relative link: one leading `/`, never `//`. */
 export const SITE_LINK_PATTERN = /^\/(?!\/)[^\s\\]*$/;
+/** Control, private-use and surrogate characters: never in a source, but for tab and newline. */
+export const UNSAFE_CHARACTER_PATTERN = /[\p{Co}\p{Cs}]|(?![\t\n])\p{Cc}/u;
+/** One form for equal text: Unicode NFC and `\n` line ends. Every save normalises before it checks. */
+export function normaliseRichText(source) {
+    return source.normalize('NFC').replace(/\r\n?/g, '\n');
+}
 /** Constructs nested deeper than this become text: the format bounds the tree a renderer walks. */
 export const RICH_TEXT_MAX_DEPTH = 64;
 /** The longest source any field may declare, in characters. */

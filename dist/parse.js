@@ -3,7 +3,7 @@ import { gfmStrikethroughFromMarkdown } from 'mdast-util-gfm-strikethrough';
 import { gfmTableFromMarkdown } from 'mdast-util-gfm-table';
 import { gfmStrikethrough } from 'micromark-extension-gfm-strikethrough';
 import { gfmTable } from 'micromark-extension-gfm-table';
-import { ASSET_LINK_PATTERN, DOC_LINK_PATTERN, RICH_TEXT_MAX_DEPTH, RICH_TEXT_PROFILE_CONSTRUCTS, } from './format.js';
+import { ASSET_LINK_PATTERN, DOC_LINK_PATTERN, RICH_TEXT_MAX_DEPTH, RICH_TEXT_PROFILE_CONSTRUCTS, UNSAFE_CHARACTER_PATTERN, normaliseRichText, } from './format.js';
 import { safeHref } from './tree.js';
 function syntaxTree(source) {
     return fromMarkdown(source, {
@@ -159,10 +159,14 @@ function parseAll(source) {
  * An inline field's tree is phrasing only, with no paragraph around it.
  */
 export function parseRichText(source, profile) {
-    const restricted = restrict(parseAll(source), new Set(RICH_TEXT_PROFILE_CONSTRUCTS[profile]));
+    const restricted = restrict(parseAll(normaliseRichText(source)), new Set(RICH_TEXT_PROFILE_CONSTRUCTS[profile]));
     return profile === 'inline' ? phrasing(restricted) : restricted;
 }
-/** What saving a source in a field needs to know: its problems, and the documents and assets it names. */
+/**
+ * What saving a source in a field needs to know: its problems, and the
+ * documents and assets it names. Check the normalised source
+ * (`normaliseRichText`): a carriage return is a control character.
+ */
 export function checkRichText(source, field) {
     const problems = new Set();
     const outside = new Set();
@@ -170,6 +174,8 @@ export function checkRichText(source, field) {
     const assetIds = new Set();
     if (source.length > field.max)
         problems.add('too-long');
+    if (UNSAFE_CHARACTER_PATTERN.test(source))
+        problems.add('unsafe-characters');
     let tree;
     try {
         tree = syntaxTree(source);

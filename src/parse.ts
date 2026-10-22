@@ -9,6 +9,8 @@ import {
   DOC_LINK_PATTERN,
   RICH_TEXT_MAX_DEPTH,
   RICH_TEXT_PROFILE_CONSTRUCTS,
+  UNSAFE_CHARACTER_PATTERN,
+  normaliseRichText,
   type RichTextConstruct,
   type RichTextProfile,
 } from './format.js'
@@ -17,6 +19,7 @@ import { safeHref, type RichTextNode } from './tree.js'
 /** Why a source may not be saved in a field. */
 export type RichTextProblem =
   | 'too-long'
+  | 'unsafe-characters'
   | 'not-in-profile'
   | 'more-than-one-paragraph'
   | 'image-without-alt'
@@ -191,17 +194,22 @@ function parseAll(source: string): RichTextNode[] {
  * An inline field's tree is phrasing only, with no paragraph around it.
  */
 export function parseRichText(source: string, profile: RichTextProfile): RichTextNode[] {
-  const restricted = restrict(parseAll(source), new Set(RICH_TEXT_PROFILE_CONSTRUCTS[profile]))
+  const restricted = restrict(parseAll(normaliseRichText(source)), new Set(RICH_TEXT_PROFILE_CONSTRUCTS[profile]))
   return profile === 'inline' ? phrasing(restricted) : restricted
 }
 
-/** What saving a source in a field needs to know: its problems, and the documents and assets it names. */
+/**
+ * What saving a source in a field needs to know: its problems, and the
+ * documents and assets it names. Check the normalised source
+ * (`normaliseRichText`): a carriage return is a control character.
+ */
 export function checkRichText(source: string, field: RichTextField): RichTextCheck {
   const problems = new Set<RichTextProblem>()
   const outside = new Set<RichTextConstruct>()
   const documentIds = new Set<string>()
   const assetIds = new Set<string>()
   if (source.length > field.max) problems.add('too-long')
+  if (UNSAFE_CHARACTER_PATTERN.test(source)) problems.add('unsafe-characters')
   let tree: Root
   try {
     tree = syntaxTree(source)
