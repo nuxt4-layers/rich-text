@@ -1,8 +1,25 @@
 # @nuxt4-layers/rich-text
 
-> **In short:** the platform's one rich-text format. A layer that stores formatted text checks every save with it; readers receive only its safe tree. It holds no state and draws nothing.
+> **In short:** a small TypeScript library that lets any layer accept formatted text, such as bold, links, lists and tables, safely. It defines one format, a safe subset of Markdown; checks text against it before it is saved; and turns saved text into a **safe tree** that a screen can draw with no risk of injected HTML. It stores nothing and draws nothing.
 
-Governed by [ADR-0011](https://github.com/nuxt4-layers/platform-architecture/blob/667e5310a66c56327f0ef80d43ce01b573ce6d86/docs/decisions/ADR-0011-shared-rich-text-and-configurable-copy.md). A stateless library, not a layer: no pages, routes, storage, ports or configuration.
+Governed by [ADR-0011](https://github.com/nuxt4-layers/platform-architecture/blob/b3ef6dd53faa097d7a6b509ec714ea7e447b3051/docs/decisions/ADR-0011-shared-rich-text-and-configurable-copy.md).
+
+## Who uses it
+
+| Who | Uses | For |
+|---|---|---|
+| A layer that stores formatted text, such as `publisher` | `richTextSchema`, `checkRichText` | Refusing anything beyond a field's profile on every save |
+| The same layer, when answering | `parseRichText` | Returning the safe tree, never HTML |
+| `ui` | The tree's types | Drawing it |
+| `content-editor` | The profiles | Offering only the tools a field allows |
+
+## A library, not a layer
+
+| | |
+|---|---|
+| **Is** | A package imported like `zod`, with no state, ports, screens or configuration |
+| **Is not** | A Nuxt layer: it has no `nuxt.config.ts`, pages, routes, components or storage |
+| **Why** | It runs inside other layers' server code and tests, where Node loads only JavaScript from installed packages. So its source is in `shared/` and its compiled JavaScript in `dist/`, committed because hosts install it from Git |
 
 ## What it holds
 
@@ -78,4 +95,4 @@ Drawing the tree is `nuxt4-layers/ui`'s; editing a formatted field is `content-e
 
 ## Development
 
-`pnpm install`, then `pnpm check` (type check and tests). After changing `src/`, run `pnpm build` and commit `dist/`: hosts install from Git and receive it as committed. `python3 scripts/check_markdown.py` checks the documentation.
+`pnpm install`, then `pnpm check` (type check and tests). After changing `shared/`, run `pnpm build` and commit `dist/`: hosts install from Git and receive it as committed. `python3 scripts/check_markdown.py` checks the documentation.

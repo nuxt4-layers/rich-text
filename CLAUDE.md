@@ -5,7 +5,7 @@ The platform's one rich-text format ([ADR-0011](https://github.com/nuxt4-layers/
 
 ## Commands
 - `pnpm install`, then `pnpm check` (= `tsc --noEmit` + `vitest run`); run it after every code change
-- `pnpm build` after changing `src/`, and commit `dist/`: hosts install from Git, so `dist/` is what they run. CI fails when it is stale. Never add a `prepare`/`postinstall` script
+- `pnpm build` after changing `shared/`, and commit `dist/`: hosts install from Git, so `dist/` is what they run. CI fails when it is stale. Never add a `prepare`/`postinstall` script
 - `python3 scripts/check_markdown.py` after every documentation change
 
 ## Rules
