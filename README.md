@@ -19,7 +19,7 @@ Governed by [ADR-0011](https://github.com/nuxt4-layers/platform-architecture/blo
 |---|---|
 | **Is** | A package imported like `zod`, with no state, ports, screens or configuration |
 | **Is not** | A Nuxt layer: it has no `nuxt.config.ts`, pages, routes, components or storage |
-| **Why** | It runs inside other layers' server code and tests, where Node loads only JavaScript from installed packages. So its source is in `src/` and its compiled JavaScript in `dist/`, committed because hosts install it from Git |
+| **Why** | It runs inside other layers' server code and tests, where Node loads only JavaScript from installed packages. So its source is in `shared/` and its compiled JavaScript in `dist/`, committed because hosts install it from Git |
 
 ## What it holds
 
@@ -95,4 +95,4 @@ Drawing the tree is `nuxt4-layers/ui`'s; editing a formatted field is `content-e
 
 ## Development
 
-`pnpm install`, then `pnpm check` (type check and tests). After changing `src/`, run `pnpm build` and commit `dist/`: hosts install from Git and receive it as committed. `python3 scripts/check_markdown.py` checks the documentation.
+`pnpm install`, then `pnpm check` (type check and tests). After changing `shared/`, run `pnpm build` and commit `dist/`: hosts install from Git and receive it as committed. `python3 scripts/check_markdown.py` checks the documentation.

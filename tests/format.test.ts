@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { parseRichText, richTextTreeSchema, type RichTextNode } from '../src/index.js'
+import { parseRichText, richTextTreeSchema, type RichTextNode } from '../shared/index.js'
 
 const target = '01928c4e-0000-7000-8000-000000000042'
 

@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { describe, expect, it } from 'vitest'
-import { richTextFields, richTextSchema } from '../src/index.js'
+import { richTextFields, richTextSchema } from '../shared/index.js'
 
 describe('richTextSchema', () => {
   it('accepts what the profile allows and refuses the rest, with the problem as the message', () => {

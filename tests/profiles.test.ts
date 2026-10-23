@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { checkRichText, normaliseRichText, parseRichText, RICH_TEXT_PROFILE_CONSTRUCTS, RICH_TEXT_PROFILES } from '../src/index.js'
+import { checkRichText, normaliseRichText, parseRichText, RICH_TEXT_PROFILE_CONSTRUCTS, RICH_TEXT_PROFILES } from '../shared/index.js'
 
 const target = '01928c4e-0000-7000-8000-000000000042'
 const max = 10_000
